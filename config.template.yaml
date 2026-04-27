@@ -1,0 +1,37 @@
+# MinerU Converter configuration
+# Copy this file to config.yaml and customize as needed.
+
+# Default output directory for converted files
+output_dir: "./raw"
+
+# MinerU CLI settings
+mineru:
+  command: "mineru"
+  args:
+    backend: "pipeline"
+    model: "auto"
+    language: "ch"
+    method: "auto"
+
+# Supported file extensions (lowercase)
+supported_extensions:
+  - ".pdf"
+  - ".docx"
+  - ".pptx"
+  - ".xlsx"
+  - ".png"
+  - ".jpg"
+  - ".jpeg"
+  - ".bmp"
+  - ".tiff"
+  - ".tif"
+
+# Manifest settings
+manifest:
+  filename: "manifest.json"
+  version: "1.0"
+
+# File organization
+organizer:
+  attachments_dir: "attachments"
+  hash_prefix_length: 8
