@@ -12,6 +12,7 @@ from .manifest_manager import (
     load_manifest,
     check_converted,
     upsert_file_record,
+    compute_sha256,
     ManifestLoadError,
     ManifestSaveError,
 )
@@ -119,6 +120,12 @@ def convert_single(
 
     file_format = _get_format(file_path)
     file_hash = new_hash or _get_file_hash(file_path)
+
+    # EPUB conversion — does not use MinerU
+    if file_format == ".epub":
+        return _convert_epub_workflow(
+            file_path, output_dir, file_format, result,
+        )
 
     try:
         # Step 1: Run MinerU
@@ -358,3 +365,66 @@ def get_status(
 def _get_file_hash(file_path: Path) -> str:
     """Helper to compute file hash (wrapper for manifest_manager.compute_sha256)."""
     return compute_sha256(file_path)
+
+
+def _convert_epub_workflow(
+    file_path: Path,
+    output_dir: Path,
+    file_format: str,
+    result: Dict[str, Any],
+) -> Dict[str, Any]:
+    """Convert an EPUB file and record the result in the manifest."""
+    from .epub_converter import convert_epub, EpubConvertError
+
+    manifest_path = get_manifest_path(output_dir)
+
+    try:
+        final_result = convert_epub(file_path, output_dir)
+
+        attachments_rel = f"attachments/{final_result['hash_prefix']}"
+        md_rel = Path(final_result["md_path"]).relative_to(output_dir)
+        upsert_file_record(
+            file_path,
+            output_md=str(md_rel),
+            output_attachments=attachments_rel,
+            file_format=file_format,
+            status="success",
+            manifest_path=manifest_path,
+        )
+
+        result["status"] = "success"
+        result["details"] = {
+            "md_path": str(final_result["md_path"]),
+            "attachments_path": final_result["attachments_path"],
+            "images": final_result["image_count"],
+        }
+
+    except EpubConvertError as e:
+        result["status"] = "failed"
+        result["error"] = f"EPUB conversion error: {e}"
+        try:
+            upsert_file_record(
+                file_path,
+                output_md="", output_attachments="",
+                file_format=file_format,
+                status="failed", error=str(e),
+                manifest_path=manifest_path,
+            )
+        except ManifestSaveError:
+            pass
+
+    except Exception as e:
+        result["status"] = "failed"
+        result["error"] = f"Unexpected EPUB error: {e}"
+        try:
+            upsert_file_record(
+                file_path,
+                output_md="", output_attachments="",
+                file_format=file_format,
+                status="failed", error=str(e),
+                manifest_path=manifest_path,
+            )
+        except ManifestSaveError:
+            pass
+
+    return result

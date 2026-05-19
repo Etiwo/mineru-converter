@@ -72,10 +72,13 @@ mineru:
 
 ## Architecture
 
+- **PDF/DOCX/PPTX/XLSX/images** — converted via MinerU (see `mineru_caller.py` → `file_organizer.py`)
+- **EPUB** — converted via a built-in converter (`epub_converter.py`) that uses `ebooklib` + `html2text`, completely independent of MinerU
 - **MinerU auto-detection** — checks availability before conversion, guides installation
 - **Atomic manifest writes** — single-lock read-modify-save for concurrent safety
 - **Unique temp directories** — each worker gets its own `.tmp_mineru_{uuid}` to avoid conflicts
 - **File locking** — safe `manifest.json` access with `fcntl.flock`
+- **Image handling** — all formats store images in `attachments/<hash8>/` with Obsidian-compatible relative paths; EPUB uses its own path-rewriting logic (`epub_converter._rewrite_image_paths`)
 
 ## Testing
 
@@ -83,4 +86,4 @@ mineru:
 python3 -m pytest tests/ -v
 ```
 
-72 tests covering MinerU invocation, page range parsing, CLI argument handling, installation guidance, file organization, and manifest management.
+72+ tests covering MinerU invocation, page range parsing, CLI argument handling, installation guidance, file organization, manifest management, and EPUB conversion.

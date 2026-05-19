@@ -21,3 +21,6 @@ htmlcov/
 # OS
 .DS_Store
 Thumbs.db
+
+# Generated output during local testing
+raw/

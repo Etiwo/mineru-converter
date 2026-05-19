@@ -21,6 +21,7 @@ _DEFAULT_CONFIG: Dict[str, Any] = {
     "supported_extensions": [
         ".pdf", ".docx", ".pptx", ".xlsx",
         ".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".tif",
+        ".epub",
     ],
     "manifest": {
         "filename": "manifest.json",

@@ -25,6 +25,7 @@ supported_extensions:
   - ".bmp"
   - ".tiff"
   - ".tif"
+  - ".epub"
 
 # Manifest settings
 manifest:

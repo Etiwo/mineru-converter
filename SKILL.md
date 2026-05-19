@@ -1,12 +1,12 @@
 ---
 name: mineru-converter
-description: Convert documents (PDF, DOCX, PPTX, XLSX, images) to Markdown using MinerU, with incremental detection, page range selection, OCR method, and language options.
+description: Convert documents (PDF, DOCX, PPTX, XLSX, EPUB, images) to Markdown using MinerU (with EPUB via built-in converter), with incremental detection, page range selection, OCR method, and language options.
 license: MIT
 ---
 
 # MinerU Document Converter
 
-Convert documents (PDF, DOCX, PPTX, XLSX, PNG, JPG, JPEG, BMP, TIFF) to Markdown using MinerU.
+Convert documents (PDF, DOCX, PPTX, XLSX, EPUB, PNG, JPG, JPEG, BMP, TIFF) to Markdown.
 
 ## What I do
 
@@ -16,6 +16,7 @@ Convert documents (PDF, DOCX, PPTX, XLSX, PNG, JPG, JPEG, BMP, TIFF) to Markdown
 - Rewrite image paths in Markdown to be Obsidian-compatible
 - Clean up MinerU temporary files
 - Support page range, OCR method, and language selection
+- Convert EPUB files to Markdown with image extraction (no MinerU needed)
 
 ## When to use me
 
@@ -34,7 +35,9 @@ Use when the user wants to:
 
 ## Prerequisites
 
-- **MinerU** must be installed and available as `mineru` in PATH (`mineru --version`)
+- **MinerU** must be installed for PDF/DOCX/PPTX/XLSX/image conversion (`mineru --version`)
+- EPUB conversion uses a built-in converter and does **not** require MinerU
+- Python packages: `ebooklib`, `html2text` (installed automatically with `pip install -r requirements.txt`)
 - The converter automatically detects if MinerU is installed before converting
 - If MinerU is not found, the converter will prompt the user to install it
 
@@ -122,7 +125,7 @@ Add `--json` flag to get structured output for parsing:
 
 ## Supported Formats
 
-PDF, DOCX, PPTX, XLSX, PNG, JPG, JPEG, BMP, TIFF
+PDF, DOCX, PPTX, XLSX, EPUB, PNG, JPG, JPEG, BMP, TIFF
 
 ## Page Range Syntax
 

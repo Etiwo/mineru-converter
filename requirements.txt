@@ -1,1 +1,3 @@
 pyyaml>=6.0
+ebooklib>=1.0
+html2text>=2024.0
